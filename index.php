@@ -2,6 +2,8 @@
 <html>
     <head>
         <title>My TODO App</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="pico-main/css/pico.min.css" />
 		<link rel="stylesheet" href="pico-main/css/pico.colors.min.css" />
         <script>
@@ -11,24 +13,41 @@
         </script>
         <style>
             #the_todo {
+                color: var(--pico-color-grey-200);
                 margin-top: 1px;
                 margin-left: 20px;
+                margin-bottom: 2px;
+            }
+            #trash {
+                height: 32px;
+                width: 32px;
+                margin-top: -4px;
+/*                margin-bottom: 8px;*/
             }
             #clear {
                 height: 60px;
                 width: 60px;
+                margin-bottom: 4px;
+                margin-left: -4px;
+                margin-right: 8px;
                 text-align: center;
                 background-color: var(--pico-color-red-500);
                 border-color: var(--pico-color-red-500);
             }
             
             .lists {
+                background-color: var(--pico-color-zinc-850);
+                padding: 20px;
+                border: 1px solid var(--pico-color-zinc-700);
+                border-radius: 10px;
+                margin-bottom: 10px;
                 align-content: center;
                 align-items: center;
                 display: inline-flex;
                 
             }
             .listbox {
+                margin-top: 20px;
                 display: flex;
                 flex-direction: column-reverse;
             }
@@ -37,10 +56,9 @@
     </head>
     <body>
         <header>
-            <h1 align="center"> Todo App </h1>
+            <h1 align="center"> TODO </h1>
 		</header>
         <?php
-
             function displayConsole($msg) {
                 echo "<script>console.log('" . $msg . "')</script>";
             }
@@ -88,14 +106,17 @@
             function appendTodos($conn, $id, $todo) {
                 $currentId = $id;
                 $idName = "clear-$currentId";
-                echo "<div class='lists'><form method='post'><button type='submit' name='$idName' id='clear' value='$id'>X</button></form><h3 id='the_todo'>$todo</h3></div>";
+                echo "<div class='lists'><br /><form method='post' id='the_todo'><button type='submit' name='$idName' id='clear' value='$id'><img id='trash' src='images/trash-other.svg' /></button></form><h4 id='the_todo'>$todo</h4></div>";
                 removeTodos($conn, $idName);
             }
 
 
 
             if (isset($_POST['add'])) {
-                storeTodos($conn, htmlspecialchars($_POST['todo_word']));
+                $words = $_POST['todo_word'];
+                if (strlen($words) != 0) {
+                    storeTodos($conn, htmlspecialchars($words));
+                }
             }
 
         ?>
@@ -116,8 +137,6 @@
                         }
                     ?>
             </div>
-
         </main>
-        </center>
     </body>
 </html>
